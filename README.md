@@ -1,4 +1,6 @@
 
+![preview-hw](/preview.jpg)
+
 [Weather-project](https://tasita902317.invisionapp.com/freehand/Weather-project--8kfl1c9qP)
 
 
@@ -19,7 +21,7 @@
 ```
 
 ## Icons
-[Icons](https://getbootstrap.com/docs/5.3/extend/icons/)
+[Guidance and suggestions for using external icon libraries with Bootstrap](https://getbootstrap.com/docs/5.3/extend/icons/)  
 [Bootstrap Icons](https://icons.getbootstrap.com/)
 
 
