@@ -13,9 +13,10 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <link rel="stylesheet" href="/src/styles.css" />
   </head>
-  <body>
-    <h1 hidden>Weather forecast application</h1>
-    <div class="appWrapper container rounded bg-info-subtle pt-2 pb-2">
+  <body class="d-flex flex-column min-vh-100">
+    
+    <div class="appWrapper container rounded bg-info-subtle pt-2 pb-2 flex-grow-0">
+      <h1 hidden>Weather forecast application</h1>
       <div class="d-flex align-items-baseline mb-1">
         <p class="text-body-secondary mb-1 me-2 ms-2">Your current location:</p>
         <p id="status" class="m-0"></p>
@@ -404,11 +405,11 @@
       </div>
     </div>
 
-    <p class="cardText text-center text-body-secondary mb-1 me-2 ms-2">
+    <p class="cardText text-center text-body-secondary mb-1 me-2 ms-2 flex-grow-1">
       Weather data last updated on 13 Aug 23, 02:20 am EEST
     </p>
 
-    <div class="m-3 position-absolute bottom-0 start-50 translate-middle-x">
+    <div class="flex-grow-0 flex-shrink-0 m-2">
       <a
         href="https://github.com/Tasitaforme/weather-forecast-app"
         target="_blank"
