@@ -14,8 +14,9 @@
     <link rel="stylesheet" href="/src/styles.css" />
   </head>
   <body class="d-flex flex-column min-vh-100">
-    
-    <div class="appWrapper container rounded bg-info-subtle pt-2 pb-2 flex-grow-0">
+    <div
+      class="appWrapper container rounded bg-info-subtle pt-2 pb-2 flex-grow-0"
+    >
       <h1 hidden>Weather forecast application</h1>
       <div class="d-flex align-items-baseline mb-1">
         <p class="text-body-secondary mb-1 me-2 ms-2">Your current location:</p>
@@ -30,20 +31,21 @@
 
       <form class="position-relative mb-2">
         <input
-          class="form-control pe-5 shadow-sm  "
+          class="form-control pe-5 shadow-sm"
           type="text"
           placeholder="Enter a city to search for weather..."
           aria-label="search a city"
-          autocomplete="off" autofocus="on"
+          autocomplete="off"
+          autofocus="on"
         />
         <div class="position-absolute top-50 end-0 translate-middle-y p-0 m-0">
-          <button type="submit" class="btn searchBtn">
+          <button type="submit" class="searchBtn btn btn-group-vertical">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
               height="16"
               fill="currentColor"
-              class="bi bi-search"
+              class="bi bi-search "
               viewBox="0 0 16 16"
               role="img"
               aria-label="search-button"
@@ -88,8 +90,8 @@
           <div
             class="d-flex flex-column align-items-start justify-content-between me-2"
           >
-            <div class="mb-2">
-              <img src="/image/sun.png" alt="weather icon" width="150" />
+            <div class="mb-2" id="icon_wrapper">
+              <img src="/image/sun.png" alt="weather icon" width="150" id="icon_main"/>
             </div>
 
             <div class="d-flex flex-row justify-content-between">
@@ -110,14 +112,13 @@
                 >
                   °F
                 </button>
-                <!-- <p class="mb-0 text-body-secondary fw-medium p-2">°F</p> -->
               </div>
             </div>
           </div>
         </div>
       </div>
       <div class="ms-2 me-2" id="details">
-        <h2 class="h3 fw-bold text-capitalize" id="weather_main">clear sky</h2>
+        <h2 class="h3 fw-bold" id="weather_main">clear sky</h2>
         <div class="d-flex align-items-baseline">
           <h3 class="h5">Feels like:</h3>
           <p class="h6 text-body-secondary ms-2">
@@ -405,7 +406,9 @@
       </div>
     </div>
 
-    <p class="cardText text-center text-body-secondary mb-1 me-2 ms-2 flex-grow-1">
+    <p
+      class="cardText text-center text-body-secondary mb-1 me-2 ms-2 flex-grow-1"
+    >
       Weather data last updated on 13 Aug 23, 02:20 am EEST
     </p>
 

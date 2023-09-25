@@ -8,6 +8,7 @@ const status = document.querySelector("#status");
 const countryIndicator = document.querySelector("#countryIndicator");
 const city = document.querySelector("#city");
 const cityTempMain = document.querySelector("#temp_main");
+const cityIconMain = document.querySelector("#icon_main");
 const cityWeatherMain = document.querySelector("#weather_main");
 const cityFeelsLike = document.querySelector("#feels_like");
 const cityHumidity = document.querySelector("#humidity");
@@ -21,8 +22,9 @@ const cityDetailedForecast = document.querySelector("#detailed_forecast");
 //--- CITY FONT-SIZE ----------------------
 function normalizeCityFont(city) {
   let length = city.innerHTML.length;
-  //console.log(length);
-  if (length < 10) {
+  console.log(length);
+  if (window.screen.width >= 640 ) {
+    if (length < 10) {
     city.style.fontSize = "calc(3.5rem + 1.5vw)";
   } else if (length >= 10 && length <= 13) {
     city.style.fontSize = "calc(2.5rem + 1.5vw)";
@@ -31,6 +33,18 @@ function normalizeCityFont(city) {
   } else if (length > 15) {
     city.style.fontSize = "calc(1.5rem + 1.5vw)";
   }
+  } else {
+    if (length < 8) {
+      city.style.fontSize = "calc(2rem + 1.5vw)";
+    } else if (length >= 8 && length <= 10) {
+      city.style.fontSize = "calc(1.5rem + 1.5vw)";
+    } else if (length >= 10 && length <= 15) {
+      city.style.fontSize = "calc(1rem + 1.5vw)";
+    } else if (length > 15) {
+      city.style.fontSize = "calc(0.5rem + 1.5vw)";
+    }
+  }
+  
 }
 normalizeCityFont(city);
 
@@ -82,10 +96,10 @@ function submitFunction(e) {
   if (!inputValue) return;
 
   const formattedInput = inputValue.trim().toLowerCase().split(/\s+/).join(" ");
-  const normalizeCityToUpper = formattedInput
-    .split(/\s+/)
-    .map((word) => word[0].toUpperCase() + word.substring(1))
-    .join(" ");
+  // const normalizeCityToUpper = formattedInput
+  //   .split(/\s+/)
+  //   .map((word) => word[0].toUpperCase() + word.substring(1))
+  //   .join(" ");
 
   //normalizeCityFont(city);
   //city.innerHTML = normalizeCityToUpper;
@@ -160,6 +174,13 @@ function innerHTML(data) {
   cityHumidity.innerHTML = data.main.humidity;
   cityWindSpeed.innerHTML = data.wind.speed;
   cityAtmPressure.innerHTML = data.main.pressure;
+  weatherIcon = data.weather[0].icon;
+
+  cityIconMain.setAttribute(
+    "src",
+    `https://openweathermap.org/img/wn/${weatherIcon}@2x.png`
+  );
+  cityIconMain.setAttribute("alt", data.weather[0].description);
 }
 
 const getWeatherByCoordinates = async (lat = 50.4, lon = 30.5) => {
@@ -168,6 +189,19 @@ const getWeatherByCoordinates = async (lat = 50.4, lon = 30.5) => {
   try {
     const { data } = await axios(`${FULL_API_URL}&lat=${lat}&lon=${lon}`);
     console.log(data);
+
+    console.log(data.dt);
+    const r = new Date(data.dt*1000).toLocaleDateString("en-us", {
+      weekday: "long",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+    let f = new Date(data.dt * 1000).toLocaleTimeString();
+    console.log(f);
+    console.log(r);
+
+
     innerHTML(data);
     status.textContent = data.name;
     status.classList.add("link");
@@ -204,6 +238,7 @@ const getWeatherByCurrentLocation = async () => {
     const data = await getWeatherByCityName(status.innerHTML);
 
     console.log(data);
+    
     innerHTML(data);
     city.innerHTML = data.name;
   } catch (error) {
