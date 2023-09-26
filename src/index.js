@@ -15,24 +15,26 @@ const cityHumidity = document.querySelector("#humidity");
 const cityWindSpeed = document.querySelector("#wind_speed");
 const cityAtmPressure = document.querySelector("#pressure");
 
+const cityWeatherDetailsMain = document.querySelector("#details_main");
 const cityWeatherDetailsRight = document.querySelector("#details_main_right");
 const cityWeatherDetails = document.querySelector("#details");
 const cityDetailedForecast = document.querySelector("#detailed_forecast");
+const weatherDataUpdate = document.querySelector("#weather_data_updated");
 
 //--- CITY FONT-SIZE ----------------------
 function normalizeCityFont(city) {
   let length = city.innerHTML.length;
-  console.log(length);
-  if (window.screen.width >= 640 ) {
+  // console.log(length);
+  if (window.screen.width >= 640) {
     if (length < 10) {
-    city.style.fontSize = "calc(3.5rem + 1.5vw)";
-  } else if (length >= 10 && length <= 13) {
-    city.style.fontSize = "calc(2.5rem + 1.5vw)";
-  } else if (length > 13 && length <= 15) {
-    city.style.fontSize = "calc(2rem + 1.5vw)";
-  } else if (length > 15) {
-    city.style.fontSize = "calc(1.5rem + 1.5vw)";
-  }
+      city.style.fontSize = "calc(3.5rem + 1.5vw)";
+    } else if (length >= 10 && length <= 13) {
+      city.style.fontSize = "calc(2.5rem + 1.5vw)";
+    } else if (length > 13 && length <= 15) {
+      city.style.fontSize = "calc(2rem + 1.5vw)";
+    } else if (length > 15) {
+      city.style.fontSize = "calc(1.5rem + 1.5vw)";
+    }
   } else {
     if (length < 8) {
       city.style.fontSize = "calc(2rem + 1.5vw)";
@@ -44,9 +46,9 @@ function normalizeCityFont(city) {
       city.style.fontSize = "calc(0.5rem + 1.5vw)";
     }
   }
-  
 }
-normalizeCityFont(city);
+
+// normalizeCityFont(city);
 
 //--- TIME/DAY ----------------------
 const currentTime = document.querySelector("#current_time");
@@ -67,6 +69,25 @@ currentTime.innerHTML = showFormattedDateTime();
 setInterval(function () {
   currentTime.innerHTML = showFormattedDateTime();
 }, 1000);
+
+//--- Weather data last updated ----------------------
+function formatDataUpdate(timestamp) {
+  function formattedDataUpdate() {
+    let dt = new Date(timestamp * 1000);
+
+    let day = dt.toLocaleDateString("en-us", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+    let time = dt.toLocaleTimeString().slice(0, 5);
+
+    return `Weather data last updated on: <br> ${day}, ${time}`;
+  }
+
+  weatherDataUpdate.innerHTML = formattedDataUpdate();
+}
 
 //--- Fahrenheit/Celsius BTN ----------------------
 function changeToFahrenheit(e) {
@@ -90,6 +111,28 @@ btnFahrenheit.addEventListener("click", changeToFahrenheit);
 btnCelsius.addEventListener("click", changeToCelsius);
 
 //-------------------------
+async function getWeatherByCity(formattedInput) {
+  try {
+    const data = await getWeatherByCityName(formattedInput);
+    cityWeatherDetails.style.display = "block";
+    cityWeatherDetailsRight.style.display = "block";
+    cityDetailedForecast.style.display = "block";
+    innerHTML(data);
+    //city.innerHTML = normalizeCityToUpper;
+    city.innerHTML = data.name;
+  } catch (error) {
+    console.log(error.message);
+    countryIndicator.innerHTML = "UA";
+    city.innerHTML =
+      "Please help stop war in Ukraine!!! <br><br> P.S.: The search for the weather forecast did not yield any results. Enter the correct city name and try again...";
+    cityWeatherDetails.style.display = "none";
+    cityWeatherDetailsRight.style.display = "none";
+    cityDetailedForecast.style.display = "none";
+    weatherDataUpdate.innerHTML = "";
+  }
+  normalizeCityFont(city);
+}
+
 function submitFunction(e) {
   e.preventDefault();
   const inputValue = e.target.elements[0].value;
@@ -105,29 +148,8 @@ function submitFunction(e) {
   //city.innerHTML = normalizeCityToUpper;
   //getWeatherByCityName(formattedInput);
 
-  const getWeatherByCity = async (formattedInput) => {
-    try {
-      const data = await getWeatherByCityName(formattedInput);
-      cityWeatherDetails.style.display = "block";
-      cityWeatherDetailsRight.style.display = "block";
-      cityDetailedForecast.style.display = "block";
-      console.log(data);
-      innerHTML(data);
-      //city.innerHTML = normalizeCityToUpper;
-      city.innerHTML = data.name;
-      e.target.reset();
-    } catch (error) {
-      console.log(error.message);
-      countryIndicator.innerHTML = "UA";
-      city.innerHTML =
-        "Please help stop war in Ukraine!!! <br><br> P.S.: The search for the weather forecast did not yield any results. Enter the correct city name and try again...";
-      cityWeatherDetails.style.display = "none";
-      cityWeatherDetailsRight.style.display = "none";
-      cityDetailedForecast.style.display = "none";
-    }
-    normalizeCityFont(city);
-  };
   getWeatherByCity(formattedInput);
+  e.target.reset();
 }
 form.addEventListener("submit", submitFunction);
 
@@ -175,6 +197,7 @@ function innerHTML(data) {
   cityWindSpeed.innerHTML = data.wind.speed;
   cityAtmPressure.innerHTML = data.main.pressure;
   weatherIcon = data.weather[0].icon;
+  formatDataUpdate(data.dt);
 
   cityIconMain.setAttribute(
     "src",
@@ -188,20 +211,6 @@ const getWeatherByCoordinates = async (lat = 50.4, lon = 30.5) => {
 
   try {
     const { data } = await axios(`${FULL_API_URL}&lat=${lat}&lon=${lon}`);
-    console.log(data);
-
-    console.log(data.dt);
-    const r = new Date(data.dt*1000).toLocaleDateString("en-us", {
-      weekday: "long",
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-    let f = new Date(data.dt * 1000).toLocaleTimeString();
-    console.log(f);
-    console.log(r);
-
-
     innerHTML(data);
     status.textContent = data.name;
     status.classList.add("link");
@@ -225,10 +234,10 @@ const getWeatherByCoordinates = async (lat = 50.4, lon = 30.5) => {
 //      console.log(error.message);
 //    }
 // };
-const getWeatherByCityName = async (city) => {
+async function getWeatherByCityName(city) {
   const { data } = await axios(`${FULL_API_URL}&q=${city}`);
   return data;
-};
+}
 
 //-------------------------
 
@@ -237,8 +246,6 @@ const getWeatherByCurrentLocation = async () => {
   try {
     const data = await getWeatherByCityName(status.innerHTML);
 
-    console.log(data);
-    
     innerHTML(data);
     city.innerHTML = data.name;
   } catch (error) {
@@ -246,3 +253,10 @@ const getWeatherByCurrentLocation = async () => {
   }
   normalizeCityFont(city);
 };
+
+
+(async () => {
+  await getWeatherByCity("Kyiv");
+  cityWeatherDetailsMain.classList.remove("visually-hidden");
+  cityWeatherDetails.removeAttribute('hidden');
+})();

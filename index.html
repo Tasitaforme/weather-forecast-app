@@ -58,7 +58,7 @@
         </div>
       </form>
 
-      <div class="d-flex justify-content-between mb-0">
+      <div class="d-flex justify-content-between mb-0 visually-hidden" id="details_main">
         <!-- ліва колонка -->
         <div class="ms-2">
           <p class="text-body-secondary">
@@ -90,8 +90,8 @@
           <div
             class="d-flex flex-column align-items-start justify-content-between me-2"
           >
-            <div class="mb-2" id="icon_wrapper">
-              <img src="/image/sun.png" alt="weather icon" width="150" id="icon_main"/>
+            <div class="mb-2" id="icon_wrapper" height="150">
+              <img src="" alt="" width="150" height="150" id="icon_main"/>
             </div>
 
             <div class="d-flex flex-row justify-content-between">
@@ -117,7 +117,8 @@
           </div>
         </div>
       </div>
-      <div class="ms-2 me-2" id="details">
+      
+      <div class="ms-2 me-2" id="details" hidden>
         <h2 class="h3 fw-bold" id="weather_main">clear sky</h2>
         <div class="d-flex align-items-baseline">
           <h3 class="h5">Feels like:</h3>
@@ -145,7 +146,7 @@
         </div>
       </div>
 
-      <div id="detailed_forecast">
+      <div id="detailed_forecast" hidden>
         <div class="d-flex gap-2 m-2 justify-content-around">
           <button class="btn btn-primary w-50" type="button">
             Hourly forecast
@@ -407,9 +408,8 @@
     </div>
 
     <p
-      class="cardText text-center text-body-secondary mb-1 me-2 ms-2 flex-grow-1"
+      class="cardText text-center text-body-secondary mb-1 me-2 ms-2 flex-grow-1" id="weather_data_updated"
     >
-      Weather data last updated on 13 Aug 23, 02:20 am EEST
     </p>
 
     <div class="flex-grow-0 flex-shrink-0 m-2">

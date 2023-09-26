@@ -44,8 +44,8 @@
 #weather_main:first-letter {
   text-transform: capitalize;
 }
-#icon_wrapper {
+/* #icon_wrapper {
   background-color: #0d6efd; 
-  /* background-color: white; */
+  background-color: white; 
   border-radius: 30px;
-}
+} */
