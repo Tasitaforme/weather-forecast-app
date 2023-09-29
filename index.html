@@ -5,6 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Weather forecast</title>
     <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/image/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/image/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/image/favicon-16x16.png"
+    />
+    <link rel="manifest" href="/image/site.webmanifest" />
+    <link rel="mask-icon" href="/image/safari-pinned-tab.svg" color="#5bbad5" />
+    <meta name="msapplication-TileColor" content="#da532c" />
+    <meta name="theme-color" content="#ffffff" />
+
+    <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
@@ -13,22 +35,45 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <link rel="stylesheet" href="/src/styles.css" />
   </head>
-  <body class="d-flex flex-column min-vh-100">
+
+  <body class="d-flex flex-column min-vh-100 bg-white text-dark">
     <div
-      class="appWrapper container rounded bg-info-subtle pt-2 pb-2 flex-grow-0"
+      class="appWrapper container rounded bg-info-subtle pt-2 pb-3 flex-grow-0 mt-2"
     >
       <h1 hidden>Weather forecast application</h1>
-      <div class="d-flex align-items-baseline mb-1">
-        <p class="text-body-secondary mb-1 me-2 ms-2">Your current location:</p>
-        <p id="status" class="m-0"></p>
-        <button
-          id="find_me"
-          class="text-body-secondary btn btn-light p-sm-1 lh-1 shadow-sm"
-        >
-          Determine
-        </button>
+      <div class="d-flex justify-content-between align-items-baseline">
+        <!-- Your current location -->
+        <div class="text-secondary d-flex align-items-baseline mb-1 ms-2 me-2">
+          <p class="mb-0 me-2">Your current location:</p>
+          <p id="status" class="m-0"></p>
+          <button
+            id="find_me"
+            class="text-secondary fs-6 btn btn-light p-1 lh-1 shadow-sm"
+          >
+            Find out
+          </button>
+        </div>
+        <!-- Switch checkbox input -->
+        <div class="form-check form-switch m-0">
+          <input
+            class="form-check-input float-none"
+            type="checkbox"
+            role="switch"
+            id="themeSwitch"
+          />
+        </div>
       </div>
 
+      <div class="text-secondary d-flex align-items-baseline mb-1 ms-2 me-2">
+        <!-- Current day and time -->
+        <p class="mb-0 me-2">Your current time:</p>
+        <p class="mb-0">
+          <span id="current_day" class="me-2"></span
+          ><span id="current_time"></span>
+        </p>
+      </div>
+
+      <!-- Search form -->
       <form class="position-relative mb-2">
         <input
           class="form-control pe-5 shadow-sm"
@@ -45,7 +90,7 @@
               width="16"
               height="16"
               fill="currentColor"
-              class="bi bi-search "
+              class="bi bi-search"
               viewBox="0 0 16 16"
               role="img"
               aria-label="search-button"
@@ -58,57 +103,73 @@
         </div>
       </form>
 
-      <div class="d-flex justify-content-between mb-0 visually-hidden" id="details_main">
-        <!-- ліва колонка -->
-        <div class="ms-2">
-          <p class="text-body-secondary">
-            <span id="current_day" class="me-2"></span
-            ><span id="current_time"></span>
-          </p>
+      <!-- Notification -->
+      <div class="text-danger mb-1 ms-2 me-2">
+        <p class="m-0" id="notification" hidden></p>
+      </div>
 
-          <div class="d-flex justify-content-start align-items-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="36"
-              fill="currentColor"
-              class="bi bi-geo-alt-fill"
-              viewBox="0 0 16 16"
-            >
-              <path
-                d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"
-              />
-            </svg>
-            <p id="countryIndicator" class="h2 fw-bold m-0">UA</p>
+      <!-- Detailed forecast for now -->
+      <div id="forecast" class="visually-hidden">
+        <div
+          class="d-flex justify-content-between mb-0 ms-2 me-2"
+          id="details_main"
+        >
+          <!-- Left side -->
+          <div>
+            <!-- Country Indicator -->
+            <div class="d-flex justify-content-start align-items-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="36"
+                fill="currentColor"
+                class="bi bi-geo-alt-fill"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"
+                />
+              </svg>
+              <p id="countryIndicator" class="h2 fw-bold m-0">UA</p>
+            </div>
+            <!-- City -->
+            <p id="city" class="h1-main fw-bold lh-1 m-0">—</p>
+            <!-- Current day and time in city-->
+            <p class="text-secondary mb-0 mt-2">
+              <span id="city_current_day" class="me-2"></span
+              ><span id="city_current_time"></span>
+            </p>
+
+            <p class="text-secondary mb-0 mb-2" id="time_difference"></p>
           </div>
 
-          <p id="city" class="h1-main fw-bold lh-1 m-0">Kyiv</p>
-        </div>
-
-        <!-- права колонка -->
-        <div id="details_main_right">
-          <div
-            class="d-flex flex-column align-items-start justify-content-between me-2"
-          >
-            <div class="mb-2" id="icon_wrapper" height="150">
-              <img src="" alt="" width="150" height="150" id="icon_main"/>
+          <!-- Right side -->
+          <div class="d-flex flex-column m-0 p-0">
+            <!-- Weather Icon -->
+            <div class="mb-2" id="icon_wrapper">
+              <img src="" alt="" width="150" height="150" id="icon_main" />
             </div>
-
-            <div class="d-flex flex-row justify-content-between">
+            <!-- Temperature -->
+            <div
+              class="d-flex flex-row justify-content-end align-items-center"
+              id="details_main_right_temp"
+            >
               <h3 class="visually-hidden">temperature:</h3>
-              <p class="h1 fw-bold m-0 me-2"><span id="temp_main">19</span>°</p>
+              <p class="display-1 fw-bold m-0 me-2 lh-1">
+                <span class="m-0" id="temp_main">—</span>°
+              </p>
 
-              <div class="d-flex flex-column justify-content-between">
+              <div class="d-flex flex-column justify-content-between gap-2">
                 <button
                   id="btn_celsius"
                   disabled
-                  class="text-body-secondary fw-medium btn btn-light p-sm-1"
+                  class="text-secondary fw-medium btn btn-light p-1 lh-1"
                 >
                   °C
                 </button>
                 <button
                   id="btn_fahrenheit"
-                  class="text-body-secondary fw-medium btn btn-light p-sm-1"
+                  class="text-secondary fw-medium btn btn-light p-1 lh-1"
                 >
                   °F
                 </button>
@@ -116,301 +177,89 @@
             </div>
           </div>
         </div>
-      </div>
-      
-      <div class="ms-2 me-2" id="details" hidden>
-        <h2 class="h3 fw-bold" id="weather_main">clear sky</h2>
-        <div class="d-flex align-items-baseline">
-          <h3 class="h5">Feels like:</h3>
-          <p class="h6 text-body-secondary ms-2">
-            <span id="feels_like">19</span>°
-          </p>
-        </div>
-        <div class="d-flex align-items-baseline">
-          <h3 class="h5">Humidity:</h3>
-          <p class="h6 text-body-secondary ms-2">
-            <span id="humidity">53</span>%
-          </p>
-        </div>
-        <div class="d-flex align-items-baseline">
-          <h3 class="h5">Wind:</h3>
-          <p class="h6 text-body-secondary ms-2">
-            <span id="wind_speed">2</span>&nbspm/s
-          </p>
-        </div>
-        <div class="d-flex align-items-baseline">
-          <h3 class="h5">Atmospheric pressure:</h3>
-          <p class="h6 text-body-secondary ms-2">
-            <span id="pressure">1022</span> &nbsphPa
-          </p>
-        </div>
-      </div>
 
-      <div id="detailed_forecast" hidden>
-        <div class="d-flex gap-2 m-2 justify-content-around">
-          <button class="btn btn-primary w-50" type="button">
-            Hourly forecast
-          </button>
-          <button class="btn btn-primary w-50" type="button">
-            Daily forecast
-          </button>
-        </div>
-
-        <div class="container text-center mb-2">
-          <div
-            class="rowColums d-flex flex-row flex-nowrap justify-content-between"
-          >
-            <!-- <div
-          class="row row-cols-auto gap-2 flex-row flex-nowrap overflow-x-auto"
-        > -->
-            <!-- картка дня/години -->
-            <div class="rounded col bg-light-subtle p-2 pt-3 pb-3">
-              <p class="text-uppercase fw-bold m-0 mb-1">Sat</p>
-              <p class="cardData m-0 mb-1">13.08</p>
-              <p class="fw-bold m-0 mb-1">26°</p>
-              <hr class="m-0 mb-1" />
-              <p class="fw-bold text-body-secondary m-0 mb-2">15°</p>
-              <img src="/image/sun.png" width="35" />
-
-              <!-- вірогідність опадів -->
-              <div class="d-flex flex-column align-items-center mt-3">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  class="bi bi-droplet"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M7.21.8C7.69.295 8 0 8 0c.109.363.234.708.371 1.038.812 1.946 2.073 3.35 3.197 4.6C12.878 7.096 14 8.345 14 10a6 6 0 0 1-12 0C2 6.668 5.58 2.517 7.21.8zm.413 1.021A31.25 31.25 0 0 0 5.794 3.99c-.726.95-1.436 2.008-1.96 3.07C3.304 8.133 3 9.138 3 10a5 5 0 0 0 10 0c0-1.201-.796-2.157-2.181-3.7l-.03-.032C9.75 5.11 8.5 3.72 7.623 1.82z"
-                  />
-                  <path
-                    fill-rule="evenodd"
-                    d="M4.553 7.776c.82-1.641 1.717-2.753 2.093-3.13l.708.708c-.29.29-1.128 1.311-1.907 2.87l-.894-.448z"
-                  />
-                </svg>
-                <p class="cardText m-0 ms-1">10%</p>
-              </div>
-              <!-- пориви вітру -->
-              <div class="d-flex flex-column align-items-center mt-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  class="bi bi-wind"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    d="M12.5 2A2.5 2.5 0 0 0 10 4.5a.5.5 0 0 1-1 0A3.5 3.5 0 1 1 12.5 8H.5a.5.5 0 0 1 0-1h12a2.5 2.5 0 0 0 0-5zm-7 1a1 1 0 0 0-1 1 .5.5 0 0 1-1 0 2 2 0 1 1 2 2h-5a.5.5 0 0 1 0-1h5a1 1 0 0 0 0-2zM0 9.5A.5.5 0 0 1 .5 9h10.042a3 3 0 1 1-3 3 .5.5 0 0 1 1 0 2 2 0 1 0 2-2H.5a.5.5 0 0 1-.5-.5z"
-                  />
-                </svg>
-                <p class="cardText m-0 ms-1">2 m/s</p>
-              </div>
-            </div>
-
-            <!-- картка дня/години -->
-            <div class="rounded col bg-light-subtle p-2 pt-3 pb-3">
-              <p class="text-uppercase fw-bold m-0 mb-1">Sat</p>
-              <p class="cardData m-0 mb-1">13.08</p>
-              <p class="fw-bold m-0 mb-1">26°</p>
-              <hr class="m-0 mb-1" />
-              <p class="fw-bold text-body-secondary m-0 mb-2">15°</p>
-              <img src="/image/sun.png" width="35" />
-
-              <!-- вірогідність опадів -->
-              <div class="d-flex flex-column align-items-center mt-3">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  class="bi bi-droplet"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M7.21.8C7.69.295 8 0 8 0c.109.363.234.708.371 1.038.812 1.946 2.073 3.35 3.197 4.6C12.878 7.096 14 8.345 14 10a6 6 0 0 1-12 0C2 6.668 5.58 2.517 7.21.8zm.413 1.021A31.25 31.25 0 0 0 5.794 3.99c-.726.95-1.436 2.008-1.96 3.07C3.304 8.133 3 9.138 3 10a5 5 0 0 0 10 0c0-1.201-.796-2.157-2.181-3.7l-.03-.032C9.75 5.11 8.5 3.72 7.623 1.82z"
-                  />
-                  <path
-                    fill-rule="evenodd"
-                    d="M4.553 7.776c.82-1.641 1.717-2.753 2.093-3.13l.708.708c-.29.29-1.128 1.311-1.907 2.87l-.894-.448z"
-                  />
-                </svg>
-                <p class="cardText m-0 ms-1">10%</p>
-              </div>
-              <!-- пориви вітру -->
-              <div class="d-flex flex-column align-items-center mt-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  class="bi bi-wind"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    d="M12.5 2A2.5 2.5 0 0 0 10 4.5a.5.5 0 0 1-1 0A3.5 3.5 0 1 1 12.5 8H.5a.5.5 0 0 1 0-1h12a2.5 2.5 0 0 0 0-5zm-7 1a1 1 0 0 0-1 1 .5.5 0 0 1-1 0 2 2 0 1 1 2 2h-5a.5.5 0 0 1 0-1h5a1 1 0 0 0 0-2zM0 9.5A.5.5 0 0 1 .5 9h10.042a3 3 0 1 1-3 3 .5.5 0 0 1 1 0 2 2 0 1 0 2-2H.5a.5.5 0 0 1-.5-.5z"
-                  />
-                </svg>
-                <p class="cardText m-0 ms-1">2 m/s</p>
-              </div>
-            </div>
-
-            <!-- картка дня/години -->
-            <div class="rounded col bg-light-subtle p-2 pt-3 pb-3">
-              <p class="text-uppercase fw-bold m-0 mb-1">Sat</p>
-              <p class="cardData m-0 mb-1">13.08</p>
-              <p class="fw-bold m-0 mb-1">26°</p>
-              <hr class="m-0 mb-1" />
-              <p class="fw-bold text-body-secondary m-0 mb-2">15°</p>
-              <img src="/image/sun.png" width="35" />
-
-              <!-- вірогідність опадів -->
-              <div class="d-flex flex-column align-items-center mt-3">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  class="bi bi-droplet"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M7.21.8C7.69.295 8 0 8 0c.109.363.234.708.371 1.038.812 1.946 2.073 3.35 3.197 4.6C12.878 7.096 14 8.345 14 10a6 6 0 0 1-12 0C2 6.668 5.58 2.517 7.21.8zm.413 1.021A31.25 31.25 0 0 0 5.794 3.99c-.726.95-1.436 2.008-1.96 3.07C3.304 8.133 3 9.138 3 10a5 5 0 0 0 10 0c0-1.201-.796-2.157-2.181-3.7l-.03-.032C9.75 5.11 8.5 3.72 7.623 1.82z"
-                  />
-                  <path
-                    fill-rule="evenodd"
-                    d="M4.553 7.776c.82-1.641 1.717-2.753 2.093-3.13l.708.708c-.29.29-1.128 1.311-1.907 2.87l-.894-.448z"
-                  />
-                </svg>
-                <p class="cardText m-0 ms-1">10%</p>
-              </div>
-              <!-- пориви вітру -->
-              <div class="d-flex flex-column align-items-center mt-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  class="bi bi-wind"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    d="M12.5 2A2.5 2.5 0 0 0 10 4.5a.5.5 0 0 1-1 0A3.5 3.5 0 1 1 12.5 8H.5a.5.5 0 0 1 0-1h12a2.5 2.5 0 0 0 0-5zm-7 1a1 1 0 0 0-1 1 .5.5 0 0 1-1 0 2 2 0 1 1 2 2h-5a.5.5 0 0 1 0-1h5a1 1 0 0 0 0-2zM0 9.5A.5.5 0 0 1 .5 9h10.042a3 3 0 1 1-3 3 .5.5 0 0 1 1 0 2 2 0 1 0 2-2H.5a.5.5 0 0 1-.5-.5z"
-                  />
-                </svg>
-                <p class="cardText m-0 ms-1">2 m/s</p>
-              </div>
-            </div>
-
-            <!-- картка дня/години -->
-            <div class="rounded col bg-light-subtle p-2 pt-3 pb-3">
-              <p class="text-uppercase fw-bold m-0 mb-1">Sat</p>
-              <p class="cardData m-0 mb-1">13.08</p>
-              <p class="fw-bold m-0 mb-1">26°</p>
-              <hr class="m-0 mb-1" />
-              <p class="fw-bold text-body-secondary m-0 mb-2">15°</p>
-              <img src="/image/sun.png" width="35" />
-
-              <!-- вірогідність опадів -->
-              <div class="d-flex flex-column align-items-center mt-3">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  class="bi bi-droplet"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M7.21.8C7.69.295 8 0 8 0c.109.363.234.708.371 1.038.812 1.946 2.073 3.35 3.197 4.6C12.878 7.096 14 8.345 14 10a6 6 0 0 1-12 0C2 6.668 5.58 2.517 7.21.8zm.413 1.021A31.25 31.25 0 0 0 5.794 3.99c-.726.95-1.436 2.008-1.96 3.07C3.304 8.133 3 9.138 3 10a5 5 0 0 0 10 0c0-1.201-.796-2.157-2.181-3.7l-.03-.032C9.75 5.11 8.5 3.72 7.623 1.82z"
-                  />
-                  <path
-                    fill-rule="evenodd"
-                    d="M4.553 7.776c.82-1.641 1.717-2.753 2.093-3.13l.708.708c-.29.29-1.128 1.311-1.907 2.87l-.894-.448z"
-                  />
-                </svg>
-                <p class="cardText m-0 ms-1">10%</p>
-              </div>
-              <!-- пориви вітру -->
-              <div class="d-flex flex-column align-items-center mt-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  class="bi bi-wind"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    d="M12.5 2A2.5 2.5 0 0 0 10 4.5a.5.5 0 0 1-1 0A3.5 3.5 0 1 1 12.5 8H.5a.5.5 0 0 1 0-1h12a2.5 2.5 0 0 0 0-5zm-7 1a1 1 0 0 0-1 1 .5.5 0 0 1-1 0 2 2 0 1 1 2 2h-5a.5.5 0 0 1 0-1h5a1 1 0 0 0 0-2zM0 9.5A.5.5 0 0 1 .5 9h10.042a3 3 0 1 1-3 3 .5.5 0 0 1 1 0 2 2 0 1 0 2-2H.5a.5.5 0 0 1-.5-.5z"
-                  />
-                </svg>
-                <p class="cardText m-0 ms-1">2 m/s</p>
-              </div>
-            </div>
-
-            <!-- картка дня/години -->
-            <div class="rounded col bg-light-subtle p-2 pt-3 pb-3">
-              <p class="text-uppercase fw-bold m-0 mb-1">Sat</p>
-              <p class="cardData m-0 mb-1">13.08</p>
-              <p class="fw-bold m-0 mb-1">26°</p>
-              <hr class="m-0 mb-1" />
-              <p class="fw-bold text-body-secondary m-0 mb-2">15°</p>
-              <img src="/image/sun.png" width="35" />
-
-              <!-- вірогідність опадів -->
-              <div class="d-flex flex-column align-items-center mt-3">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  class="bi bi-droplet"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M7.21.8C7.69.295 8 0 8 0c.109.363.234.708.371 1.038.812 1.946 2.073 3.35 3.197 4.6C12.878 7.096 14 8.345 14 10a6 6 0 0 1-12 0C2 6.668 5.58 2.517 7.21.8zm.413 1.021A31.25 31.25 0 0 0 5.794 3.99c-.726.95-1.436 2.008-1.96 3.07C3.304 8.133 3 9.138 3 10a5 5 0 0 0 10 0c0-1.201-.796-2.157-2.181-3.7l-.03-.032C9.75 5.11 8.5 3.72 7.623 1.82z"
-                  />
-                  <path
-                    fill-rule="evenodd"
-                    d="M4.553 7.776c.82-1.641 1.717-2.753 2.093-3.13l.708.708c-.29.29-1.128 1.311-1.907 2.87l-.894-.448z"
-                  />
-                </svg>
-                <p class="cardText m-0 ms-1">10%</p>
-              </div>
-              <!-- пориви вітру -->
-              <div class="d-flex flex-column align-items-center mt-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  class="bi bi-wind"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    d="M12.5 2A2.5 2.5 0 0 0 10 4.5a.5.5 0 0 1-1 0A3.5 3.5 0 1 1 12.5 8H.5a.5.5 0 0 1 0-1h12a2.5 2.5 0 0 0 0-5zm-7 1a1 1 0 0 0-1 1 .5.5 0 0 1-1 0 2 2 0 1 1 2 2h-5a.5.5 0 0 1 0-1h5a1 1 0 0 0 0-2zM0 9.5A.5.5 0 0 1 .5 9h10.042a3 3 0 1 1-3 3 .5.5 0 0 1 1 0 2 2 0 1 0 2-2H.5a.5.5 0 0 1-.5-.5z"
-                  />
-                </svg>
-                <p class="cardText m-0 ms-1">2 m/s</p>
-              </div>
-            </div>
+        <!-- Detailed info for now-->
+        <div class="mt-1 ms-2 me-2" id="details">
+          <h2 class="h3 fw-bold" id="weather_main">—</h2>
+          <div class="d-flex align-items-baseline">
+            <h3 class="h5 me-2">Feels like:</h3>
+            <p class="h5 text-secondary"><span id="feels_like">—</span>°</p>
+          </div>
+          <div class="d-flex align-items-baseline">
+            <h3 class="h5 me-2">Humidity:</h3>
+            <p class="h5 text-secondary"><span id="humidity">—</span>%</p>
+          </div>
+          <div class="d-flex align-items-baseline">
+            <h3 class="h5 me-2">Wind:</h3>
+            <p class="h5 text-secondary">
+              <span id="wind_speed">—</span>&nbspm/s
+            </p>
+          </div>
+          <div class="d-flex flex-wrap align-items-baseline">
+            <h3 class="h5 me-2">Atmospheric pressure:</h3>
+            <p class="h5 text-secondary">
+              <span id="pressure">—</span> &nbspmm Hg
+            </p>
           </div>
         </div>
+
+        <!-- Forecast -->
+        <div id="forecast_daily_hourly">
+          <!-- Forecast buttons-->
+          <div class="d-flex gap-2 justify-content-between m-2">
+            <button
+              class="btn btn-primary w-50"
+              type="button"
+              id="forecastHourly"
+            >
+              Hourly forecast
+            </button>
+            <button
+              class="btn btn-primary w-50"
+              type="button"
+              id="forecastDaily"
+            >
+              Weekly forecast
+            </button>
+          </div>
+
+          <!-- Detailed forecast-->
+          <div class="text-center mb-2 ms-2 me-2" id="detailed_forecast" hidden>
+            <div
+              class="overflow-x-auto d-flex flex-row flex-nowrap justify-content-between gap-1 ps-2 pe-2 pb-3 pt-3 pb-3"
+              id="detailed_forecast_hourly"
+            ></div>
+            <div
+              class="overflow-x-auto d-flex flex-row flex-nowrap justify-content-between gap-1 ps-2 pe-2 pb-3 pt-3 pb-3"
+              id="detailed_forecast_daily"
+            ></div>
+          </div>
+        </div>
+        <button
+          class="visually-hidden btn btn-primary text-center rounded-circle justify-content-center align-items-center d-flex p-1 m-auto"
+          type="button"
+          id="forecastHide"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            fill="currentColor"
+            class="bi bi-caret-up-fill"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"
+            />
+          </svg>
+        </button>
       </div>
     </div>
 
     <p
-      class="cardText text-center text-body-secondary mb-1 me-2 ms-2 flex-grow-1" id="weather_data_updated"
-    >
-    </p>
+      class="cardText text-center text-secondary mt-1 mb-1 me-2 ms-2 flex-grow-1"
+      id="weather_data_updated"
+    ></p>
 
     <div class="flex-grow-0 flex-shrink-0 m-2">
       <a
@@ -431,6 +280,25 @@
           />
         </svg>
         <p class="cardText m-0 fw-bold">Open-source code, by Tasita</p>
+      </a>
+      <a
+        href="https://www.linkedin.com/in/tasita/"
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="link-secondary justify-content-center align-items-center d-flex link-underline-opacity-0"
+        ><p class="cardText m-0 fw-bold">Feel free to contact me</p>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          class="bi bi-linkedin ms-1"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"
+          />
+        </svg>
       </a>
     </div>
 
