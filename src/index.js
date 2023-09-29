@@ -241,7 +241,7 @@ async function getWeatherByCoordinates(lat, lon) {
   } catch (error) {
     console.log(error.message);
     errorHTML();
-    notification.innerHTML = `${error.message} <br>Your location could not be determined... <br><br>Please help stop war in Ukraine!!!`;
+    notification.innerHTML = `${error.message} <br>Your location could not be determined...`;
   }
 }
 
@@ -256,7 +256,7 @@ const getWeatherByCurrentLocation = async () => {
   } catch (error) {
     console.log(error.message);
     errorHTML();
-    notification.innerHTML = `${error.message} <br>Something went wrong, please try again... <br><br>💛💙 Please help stop war in Ukraine!!!`;
+    notification.innerHTML = `${error.message} <br>Something went wrong, please try again...`;
   }
 };
 
@@ -274,7 +274,7 @@ async function getWeatherByCity(formattedInput) {
   } catch (error) {
     console.log(error.message);
     errorHTML();
-    notification.innerHTML = `The search for the weather forecast did not yield any results.<br>Enter the correct city name and try again.<br><br>💛💙 Please help stop war in Ukraine!!!`;
+    notification.innerHTML = `The search for the weather forecast did not yield any results.<br>Enter the correct city name and try again.`;
   }
 }
 
