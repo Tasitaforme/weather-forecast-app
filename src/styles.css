@@ -16,25 +16,17 @@
 .cardText {
   font-size: 0.75rem;
 }
-#weather_card {
+
+.weather_card {
   transform: scale(1);
   box-shadow: none;
   transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1),
     box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-#weather_card:hover {
+.weather_card:hover {
   transform: scale(1.05);
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.404);
-}
-
-#status.link {
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-#status.link:hover {
-  color: #0d6efd;
 }
 
 #weather_main:first-letter {
@@ -56,3 +48,10 @@
     justify-content: flex-start !important;
   }
 }
+@media screen and (min-width: 600px) {
+  .appWrapper {
+    margin-top: 1em;
+    padding-left: 2em !important;
+    padding-right: 2em !important;
+  }
+} 

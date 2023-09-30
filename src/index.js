@@ -234,9 +234,10 @@ async function getWeatherByCoordinates(lat, lon) {
     createForecastMarkup(dataForecast);
 
     timeDifference.innerHTML = "";
-    status.textContent = data.name;
-    status.classList.add("link");
-    const statusLink = document.querySelector("#status.link");
+    cityCurrentDay.innerHTML = "";
+    cityCurrentTime.innerHTML = "";
+    status.innerHTML = `<a class="m-0 object-fit-sm-scale link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" role="button" tabindex="0">${data.name}</a>`;
+    const statusLink = document.querySelector("#status a");
     statusLink.addEventListener("click", getWeatherByCurrentLocation);
   } catch (error) {
     console.log(error.message);
@@ -246,12 +247,19 @@ async function getWeatherByCoordinates(lat, lon) {
 }
 
 const getWeatherByCurrentLocation = async () => {
-  const status = document.querySelector("#status");
+  const status = document.querySelector("#status a");
   try {
     const data = await fetchWeatherByCityName(status.innerHTML);
     fillInnerHTML(data);
+
     dataForecast = await getWeatherForecast(data);
     createForecastMarkup(dataForecast);
+
+    clearInterval(cityTimeInterval);
+    cityTimeInterval = null;
+    cityCurrentDay.innerHTML = "";
+    cityCurrentTime.innerHTML = "";
+
     timeDifference.innerHTML = "";
   } catch (error) {
     console.log(error.message);
@@ -270,7 +278,16 @@ async function getWeatherByCity(formattedInput) {
     const cityCurrentDate = new Date().toLocaleString("en-US", {
       timeZone: dataForecast.timezone,
     });
-    showFormattedCityDateTime(cityCurrentDate);
+
+    const statusLink = document.querySelector("#status a");
+    if (statusLink?.innerHTML === city.innerHTML) {
+      clearInterval(cityTimeInterval);
+      cityTimeInterval = null;
+      cityCurrentDay.innerHTML = "";
+      cityCurrentTime.innerHTML = "";
+    } else {
+      showFormattedCityDateTime(cityCurrentDate);
+    }
   } catch (error) {
     console.log(error.message);
     errorHTML();
@@ -372,7 +389,7 @@ function createForecastDailyMarkup(arr) {
         weather,
         wind_speed,
       }) => `   <!-- day/hour card -->
-      <div class="rounded ${cardBg} p-3 weather_card">
+      <div class="rounded ${cardBg} p-3 w-auto weather_card">
         <p class="text-uppercase fw-bold m-0 mb-1">${new Date(
           dt * 1000
         ).toLocaleDateString("en-us", {
@@ -393,7 +410,7 @@ function createForecastDailyMarkup(arr) {
       )}</span>°</p>
         <img src="/image/icon${weather[0].icon}.png" width="35" />
 
-        <div class="d-flex flex-column align-items-center mt-3">
+        <div class="mt-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -401,6 +418,7 @@ function createForecastDailyMarkup(arr) {
             fill="currentColor"
             class="bi bi-droplet"
             viewBox="0 0 16 16"
+            aria-label="humidity"
           >
             <path
               fill-rule="evenodd"
@@ -414,7 +432,7 @@ function createForecastDailyMarkup(arr) {
           <p class="cardText m-0">${humidity}%</p>
         </div>
 
-        <div class="d-flex flex-column align-items-center mt-2">
+        <div class="mt-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -422,6 +440,7 @@ function createForecastDailyMarkup(arr) {
             fill="currentColor"
             class="bi bi-wind"
             viewBox="0 0 16 16"
+            aria-label="wind speed"
           >
             <path
               d="M12.5 2A2.5 2.5 0 0 0 10 4.5a.5.5 0 0 1-1 0A3.5 3.5 0 1 1 12.5 8H.5a.5.5 0 0 1 0-1h12a2.5 2.5 0 0 0 0-5zm-7 1a1 1 0 0 0-1 1 .5.5 0 0 1-1 0 2 2 0 1 1 2 2h-5a.5.5 0 0 1 0-1h5a1 1 0 0 0 0-2zM0 9.5A.5.5 0 0 1 .5 9h10.042a3 3 0 1 1-3 3 .5.5 0 0 1 1 0 2 2 0 1 0 2-2H.5a.5.5 0 0 1-.5-.5z"
@@ -446,8 +465,8 @@ function createForecastHourlyMarkup(arr) {
         weather,
         wind_speed,
       }) => `   <!-- day/hour card -->
-      <div class="rounded ${cardBg} p-3 weather_card">
-        <p class="text-uppercase fw-bold m-0 mb-1">${new Date(dt * 1000)
+      <div class="rounded ${cardBg} pt-3 pb-3 ps-2 pe-2 weather_card">
+        <p class="fw-bold m-0 mb-1">${new Date(dt * 1000)
           .getHours()
           .toString()
           .padStart(2, "0")}:${new Date(dt * 1000)
@@ -460,13 +479,13 @@ function createForecastHourlyMarkup(arr) {
           .padStart(2, "0")}.${(new Date(dt * 1000).getMonth() + 1)
         .toString()
         .padStart(2, "0")}</p>
-        <p class="fw-bold m-0 mb-1"><span class="card_temp">${Math.round(
+        <p class="fw-bold m-0 mb-2"><span class="card_temp">${Math.round(
           temp
         )}</span>°</p>
         
         <img src="/image/icon${weather[0].icon}.png" width="35" />
 
-        <div class="d-flex flex-column align-items-center mt-3">
+        <div class="mt-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -474,6 +493,7 @@ function createForecastHourlyMarkup(arr) {
             fill="currentColor"
             class="bi bi-droplet"
             viewBox="0 0 16 16"
+            aria-label="humidity"
           >
             <path
               fill-rule="evenodd"
@@ -487,7 +507,7 @@ function createForecastHourlyMarkup(arr) {
           <p class="cardText m-0">${humidity}%</p>
         </div>
 
-        <div class="d-flex flex-column align-items-center mt-2">
+        <div class="mt-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -495,11 +515,13 @@ function createForecastHourlyMarkup(arr) {
             fill="currentColor"
             class="bi bi-wind"
             viewBox="0 0 16 16"
+            aria-label="wind speed"
           >
             <path
               d="M12.5 2A2.5 2.5 0 0 0 10 4.5a.5.5 0 0 1-1 0A3.5 3.5 0 1 1 12.5 8H.5a.5.5 0 0 1 0-1h12a2.5 2.5 0 0 0 0-5zm-7 1a1 1 0 0 0-1 1 .5.5 0 0 1-1 0 2 2 0 1 1 2 2h-5a.5.5 0 0 1 0-1h5a1 1 0 0 0 0-2zM0 9.5A.5.5 0 0 1 .5 9h10.042a3 3 0 1 1-3 3 .5.5 0 0 1 1 0 2 2 0 1 0 2-2H.5a.5.5 0 0 1-.5-.5z"
             />
           </svg>
+          
           <p class="cardText m-0">${Math.round(wind_speed)} m/s</p>
         </div>
       </div>`
@@ -527,6 +549,8 @@ function createForecastMarkup(dataForecast) {
   forecastWrapperHourly.classList.add("visually-hidden");
 
   cardTemperature = document.querySelectorAll(".card_temp");
+  forecastWrapperHourly.scrollTo(0, 0);
+  forecastWrapperDaily.scrollTo(0, 0);
 }
 
 //--- Forecast Buttons ----------------------
@@ -624,6 +648,11 @@ function changeTheme() {
   if (city) {
     await getWeatherByCity(city);
     cityWeatherForecast.classList.remove("visually-hidden");
+
+    clearInterval(cityTimeInterval);
+    cityTimeInterval = null;
+    cityCurrentDay.innerHTML = "";
+    cityCurrentTime.innerHTML = "";
   } else {
     await getWeatherByCity("fortune");
     cityWeatherForecast.classList.remove("visually-hidden");
