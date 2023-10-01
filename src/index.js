@@ -54,27 +54,26 @@ function normalizeCityFont(city) {
 
 //normalizeCityFont(city);
 
-//--- TIME/DAY ----------------------
+//--- Current day and time ----------------------
+// const currentTime = document.querySelector("#current_time");
+// const currentDay = document.querySelector("#current_day");
 
-const currentTime = document.querySelector("#current_time");
-const currentDay = document.querySelector("#current_day");
+// function showFormattedDateTime() {
+//   let now = new Date();
 
-function showFormattedDateTime() {
-  let now = new Date();
+//   let hours = now.getHours().toString().padStart(2, "0");
+//   let minutes = now.getMinutes().toString().padStart(2, "0");
+//   currentDay.innerHTML = new Date().toLocaleDateString("en-us", {
+//     weekday: "long",
+//   });
+//   return hours + ":" + minutes;
+// }
 
-  let hours = now.getHours().toString().padStart(2, "0");
-  let minutes = now.getMinutes().toString().padStart(2, "0");
-  currentDay.innerHTML = new Date().toLocaleDateString("en-us", {
-    weekday: "long",
-  });
-  return hours + ":" + minutes;
-}
+// currentTime.innerHTML = showFormattedDateTime();
 
-currentTime.innerHTML = showFormattedDateTime();
-
-let currentTimeInterval = setInterval(function () {
-  currentTime.innerHTML = showFormattedDateTime();
-}, 1000);
+// let currentTimeInterval = setInterval(function () {
+//   currentTime.innerHTML = showFormattedDateTime();
+// }, 1000);
 
 //--- City time/day ----------------------
 const cityCurrentTime = document.getElementById("city_current_time");
@@ -312,7 +311,7 @@ function fillInnerHTML(data) {
   cityAtmPressure.innerHTML = Math.round(data.main.pressure * 0.75006375541921);
   weatherIcon = data.weather[0].icon;
   formatDataUpdate(data.dt);
-  cityIconMain.setAttribute("src", `/image/icon${weatherIcon}.png`);
+  cityIconMain.setAttribute("src", `/image/icon-big-${weatherIcon}.png`);
   cityIconMain.setAttribute("alt", data.weather[0].description);
   cityDetailedForecast.setAttribute("hidden", "");
   btnForecastHourly.disabled = false;
@@ -389,7 +388,7 @@ function createForecastDailyMarkup(arr) {
         weather,
         wind_speed,
       }) => `   <!-- day/hour card -->
-      <div class="rounded ${cardBg} p-3 w-auto weather_card">
+      <div class="rounded ${cardBg} pt-3 pb-3 ps-2 pe-2 w-auto weather_card">
         <p class="text-uppercase fw-bold m-0 mb-1">${new Date(
           dt * 1000
         ).toLocaleDateString("en-us", {
@@ -408,7 +407,9 @@ function createForecastDailyMarkup(arr) {
         <p class="fw-bold ${cardTempMin} m-0 mb-2 card_temp_min"><span class="card_temp">${Math.round(
         temp.min
       )}</span>°</p>
-        <img src="/image/icon${weather[0].icon}.png" width="35" />
+        <img src="/image/icon-small-${
+          weather[0].icon
+        }.png" width="35" class="w-100 m-0" />
 
         <div class="mt-2">
           <svg
@@ -483,7 +484,9 @@ function createForecastHourlyMarkup(arr) {
           temp
         )}</span>°</p>
         
-        <img src="/image/icon${weather[0].icon}.png" width="35" />
+        <img src="/image/icon-small-${
+          weather[0].icon
+        }.png" width="35" class="w-100 m-0"/>
 
         <div class="mt-2">
           <svg

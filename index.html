@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Weather forecast</title>
-    <link
+    <!-- <link
       rel="apple-touch-icon"
       sizes="180x180"
       href="/image/apple-touch-icon.png"
@@ -24,6 +24,33 @@
     <link rel="manifest" href="/image/site.webmanifest" />
     <link rel="mask-icon" href="/image/safari-pinned-tab.svg" color="#5bbad5" />
     <meta name="msapplication-TileColor" content="#da532c" />
+    <meta name="theme-color" content="#ffffff" /> -->
+
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/image/favicon/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/image/favicon/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/image/favicon/favicon-16x16.png"
+    />
+    <link rel="manifest" href="/image/favicon/site.webmanifest" />
+    <link
+      rel="mask-icon"
+      href="/image/favicon/safari-pinned-tab.svg"
+      color="#2d89ef"
+    />
+    <meta name="msapplication-TileColor" content="#2d89ef" />
+    <meta name="msapplication-TileImage" content="/mstile-144x144.png" />
     <meta name="theme-color" content="#ffffff" />
 
     <link
@@ -64,15 +91,15 @@
           />
         </div>
       </div>
-
-      <div class="text-secondary d-flex align-items-baseline mb-1">
-        <!-- Current day and time -->
+      
+      <!-- Current day and time -->
+      <!-- <div class="text-secondary d-flex align-items-baseline mb-1">
         <p class="mb-0 me-2">Your current time:</p>
         <p class="mb-0">
           <span id="current_day" class="me-2"></span
           ><span id="current_time"></span>
         </p>
-      </div>
+      </div> -->
 
       <!-- Search form -->
       <form class="position-relative mb-2">
@@ -224,11 +251,11 @@
           <!-- Detailed forecast-->
           <div class="text-center mb-2" id="detailed_forecast" hidden>
             <div
-              class="overflow-x-scroll scrol d-flex flex-row flex-nowrap justify-content-between gap-1 pb-3 pt-3 pb-3"
+              class="overflow-x-auto d-flex flex-row flex-nowrap justify-content-between gap-1 pb-3 pt-3 pb-3"
               id="detailed_forecast_hourly"
             ></div>
             <div
-              class="overflow-x-auto overflow-x-scroll d-flex flex-row flex-nowrap justify-content-between gap-1 pb-3 pt-3 pb-3"
+              class="overflow-x-auto d-flex flex-row flex-nowrap justify-content-between gap-1 pb-3 pt-3 pb-3"
               id="detailed_forecast_daily"
             ></div>
           </div>
