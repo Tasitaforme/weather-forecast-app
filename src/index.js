@@ -80,6 +80,14 @@ const cityCurrentTime = document.getElementById("city_current_time");
 const cityCurrentDay = document.getElementById("city_current_day");
 const timeDifference = document.getElementById("time_difference");
 
+//--- Atr for auto Edge translator ----------------------
+// function clearAutoTranslateAtr(el) {
+//   el.removeAttribute("_mstmutation");
+//   el.removeAttribute("_istranslated");
+//   el.removeAttribute("_msttexthash");
+//   el.removeAttribute("_msthash");
+// }
+
 function showFormattedCityDateTime(timestamp) {
   if (!timestamp) return;
 
@@ -110,8 +118,12 @@ function showFormattedCityDateTime(timestamp) {
     const cityDay = date.toLocaleDateString("en-us", {
       weekday: "long",
     });
-    cityCurrentDay.innerHTML = cityDay;
+    //cityCurrentDay.innerHTML = cityDay;
     cityCurrentTime.innerHTML = cityHours + ":" + cityMinutes;
+
+    if (cityCurrentDay.innerHTML !== cityDay) {
+      cityCurrentDay.innerHTML = cityDay;
+    }
   }
 
   formattedCityDateTime(cityDateNow);
